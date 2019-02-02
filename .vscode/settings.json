@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "gtk.h": "c",
+        "bot_dock_edge.h": "c",
+        "zrythm.h": "c"
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Disabled"
+
+}

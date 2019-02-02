@@ -1,0 +1,36 @@
+ {
+     "configurations": [{
+         "name": "Linux",
+         "includePath": [
+             "/home/my5t3ry/codeBase/cpp/zrythm/**",
+             "/usr/include/**",
+             "/usr/lib/x86_64-linux-gnu/libfakeroot/**/**",
+             "/lib/i386-linux-gnu/**",
+             "/usr/lib/i386-linux-gnu/**",
+             "/usr/local/lib/**",
+             "/usr/local/lib/x86_64-linux-gnu/**",
+             "/lib/x86_64-linux-gnu/**",
+             "/usr/lib/x86_64-linux-gnu/**",
+             "/lib32/**",
+             "/usr/lib32/**",
+             "/libx32/**",
+             "/usr/libx32/**",
+             "/lib/**",
+             "/usr/lib/**",
+             "/usr/lib/i386-linux-gnu/**"
+         ],
+         "defines": [],
+         "compilerPath": "/usr/bin/clang",
+         "cStandard": "c11",
+         "cppStandard": "c++17",
+         "intelliSenseMode": "clang-x64",
+         "browse": {
+             "path": [
+                 "/home/my5t3ry/codeBase/cpp/zrythm/**"
+             ],
+             "limitSymbolsToIncludedHeaders": false,
+             "databaseFilename": ""
+         }
+     }],
+     "version": 4
+ }  
