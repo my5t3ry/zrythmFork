@@ -1,0 +1,268 @@
+# Add .d to Make's recognized suffixes.
+SUFFIXES += .d
+
+# variables
+WINDOWS=@WINDOWS@
+LINUX=@LINUX@
+OSX=@OSX@
+PACKAGE_MODE=@PACKAGE_MODE@
+RELEASE=@RELEASE@
+
+# -----------------------
+#  dirs/names/files
+#  ----------------------
+ifeq ($(RELEASE),1)
+	BUILD_DIR = build/release
+else
+	BUILD_DIR = build/debug
+endif
+OBJ_DIR = $(BUILD_DIR)/obj
+DEP_DIR = $(BUILD_DIR)/dep
+BIN = zrythm
+SRC_DIR = src
+INC_DIR = inc
+DATA_DIR = data
+FONTS_DIR = resources/fonts
+ICONS_DIR = resources/icons
+
+CC = @CC@
+DEFS = @DEFS@
+INSTALL = install
+INSTALL_DATA = ${INSTALL} -m 644
+INSTALL_PROGRAM = ${INSTALL}
+INSTALL_FONT = ${INSTALL} -m 644
+LDFLAGS = @LDFLAGS@
+MKDIR_P = mkdir -p
+GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
+gsettingsschemadir = @gsettingsschemadir@
+OBJEXT = @OBJEXT@
+PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
+PACKAGE_NAME = @PACKAGE_NAME@
+PACKAGE_STRING = @PACKAGE_STRING@
+PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
+PACKAGE_VERSION = @PACKAGE_VERSION@
+PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
+SHELL = @SHELL@
+srcdir = @srcdir@
+
+# Installation directory variables
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+fontdir = @datarootdir@/fonts
+htmldir = @htmldir@
+includedir = @includedir@
+libdir = @libdir@
+libexecdir = @libexecdir@
+localedir = @localedir@
+localstatedir = @localstatedir@
+mandir = @mandir@
+pdfdir = @pdfdir@
+sharedstatedir = @sharedstatedir@
+sysconfdir = @sysconfdir@
+
+
+# library CFLAGS
+LIBCYAML_CFLAGS = @LIBCYAML_CFLAGS@
+GTK3_CFLAGS = @GTK3_CFLAGS@
+JACK_CFLAGS = @JACK_CFLAGS@
+LIBDAZZLE_CFLAGS = @LIBDAZZLE_CFLAGS@
+LILV_CFLAGS = @LILV_CFLAGS@
+LV2_CFLAGS = @LV2_CFLAGS@
+SUIL_CFLAGS = @SUIL_CFLAGS@
+LIBXML_CFLAGS = @LIBXML_CFLAGS@
+LIBSMF_CFLAGS = @LIBSMF_CFLAGS@
+PORTAUDIO_CFLAGS = @PORTAUDIO_CFLAGS@
+SNDFILE_CFLAGS = @SNDFILE_CFLAGS@
+
+# library LIBS
+LIBCYAML_LIBS = @LIBCYAML_LIBS@
+GTK3_LIBS = @GTK3_LIBS@
+JACK_LIBS = @JACK_LIBS@
+LIBDAZZLE_LIBS = @LIBDAZZLE_LIBS@
+LILV_LIBS = @LILV_LIBS@
+LV2_LIBS = @LV2_LIBS@
+SUIL_LIBS = @SUIL_LIBS@
+LIBXML_LIBS = @LIBXML_LIBS@
+LIBSMF_LIBS = @LIBSMF_LIBS@
+PORTAUDIO_LIBS = @PORTAUDIO_LIBS@
+SNDFILE_LIBS = @SNDFILE_LIBS@
+
+DEFAULT_INCLUDES = -I. -I./$(INC_DIR) -I./$(SRC_DIR)
+
+ifeq ($(RELEASE),1)
+	DEFAULT_CFLAGS += -O3
+ifeq ($(PACKAGE_MODE),1)
+	DEFAULT_CFLAGS += -g
+endif
+else
+	DEFAULT_CFLAGS += -g -O0
+endif
+
+# -rdynamic gcc flag
+ifeq ($(CC),gcc)
+	R_DYNAMIC = -rdynamic
+else ifeq ($(CC),x86_64-w64-mingw32-gcc)
+	#R_DYNAMIC = -export-all-symbols
+endif
+
+ifeq ($(WINDOWS),1)
+	EXT = .exe
+	EXTRA_LD_FLAGS += -fno-stack-protector -mwindows
+else
+ifneq ($(RELEASE),1)
+#	EXTRA_LD_FLAGS += -pg
+endif
+#EXTRA_LD_FLAGS += -DGDK_DISABLE_DEPRECATED \
+#									 -DGTK_DISABLE_DEPRECATED
+endif
+
+CFLAGS = -Wall \
+ 	$(R_DYNAMIC) \
+	$(DEFAULT_INCLUDES) \
+	$(LIBCYAML_CFLAGS) \
+	$(GTK3_CFLAGS) \
+	$(JACK_CFLAGS) \
+	$(LIBDAZZLE_CFLAGS) \
+	$(LIBSMF_CFLAGS) \
+	$(LIBXML_CFLAGS) \
+	$(LILV_CFLAGS) \
+	$(LV2_CFLAGS) \
+	$(PORTAUDIO_CFLAGS) \
+	$(SUIL_CFLAGS) \
+	$(SNDFILE_CFLAGS) \
+	$(DEFAULT_CFLAGS)
+
+
+LDFLAGS =	\
+  $(LIBCYAML_LIBS) \
+  $(GTK3_LIBS) \
+	$(JACK_LIBS) \
+	$(LIBDAZZLE_LIBS) \
+	$(LIBSMF_LIBS) \
+	$(LIBXML_LIBS) \
+	$(LILV_LIBS) \
+	$(LV2_LIBS) \
+	$(PORTAUDIO_LIBS) \
+	$(SUIL_LIBS) \
+	$(SNDFILE_LIBS) \
+	$(EXTRA_LD_FLAGS) \
+	-lrt \
+	-lasound \
+	-lm \
+	-lpthread
+
+built_src = $(BUILD_DIR)/resources.c
+built_obj = $(built_src:%.c=$(BUILD_DIR/%.o))
+built_dep = $(built_obj:%.o=%.d))
+
+#Find all the C++ files in the src/ directory
+SRCS = $(shell find src/ -name "*.c")
+# All .o files go to build dir.
+OBJ = $(SRCS:%.c=$(BUILD_DIR)/%.o)
+# Gcc/Clang will create these .d files containing dependencies.
+DEP = $(OBJ:%.o=%.d)
+
+gsettings_SCHEMAS = $(DATA_DIR)/org.zrythm.gschema.xml
+#EXTRA_DIST = $(gsettings_SCHEMAS)
+
+# desktop file
+desktopdir = $(datadir)/applications
+desktop_DATA = $(DATA_DIR)/zrythm.desktop
+
+#the application icon
+appicondir=$(datadir)/icons/hicolor/scalable/apps
+appicon_DATA = resources/icons/zrythm/z.svg
+
+
+# -----------------------------
+#  rules
+#  ----------------------------
+
+# Default target named after the binary.
+$(BIN) : $(BUILD_DIR)/$(BIN)$(EXT)
+
+# Actual target of the binary - depends on all .o files.
+$(BUILD_DIR)/$(BIN)$(EXT): $(OBJ) $(BUILD_DIR)/resources.o
+	# Create build directories - same structure as sources.
+	$(MKDIR_P) $(@D)
+	# Just link all the object files.
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+	# done
+
+$(BUILD_DIR)/zrythm.gresource.xml: resources/gen-gtk-gresources-xml.py \
+	resources/theme.css \
+	resources/ui/*.ui \
+	resources/icons/zrythm/*.svg \
+	resources/icons/gnome-builder/*.svg
+	resources/gen-gtk-gresources-xml.py resources $@
+
+$(BUILD_DIR)/resources.c: $(BUILD_DIR)/zrythm.gresource.xml
+	$(MKDIR_P) $(BUILD_DIR)
+	glib-compile-resources $(BUILD_DIR)/zrythm.gresource.xml --target=$(BUILD_DIR)/resources.c \
+	--generate-source --sourcedir=resources
+
+# Include all dep files
+-include $(DEP)
+
+# Build target for every single object file.
+# The potential dependency on header files is covered
+# by calling `-include $(DEP)`.
+$(BUILD_DIR)/%.$(OBJEXT): %.c
+	$(MKDIR_P) $(dir $@)
+	# The -MMD flags additionaly creates a .d file with
+	# the same name as the .o file.
+	$(CC) $(CFLAGS) -MMD -c $< -o $@ $(LDFLAGS)
+
+.PHONY: clean
+clean:
+	#rm -rf $(BUILD_DIR)/*
+	# This should remove all generated files.
+	-rm $(BUILD_DIR)/$(BIN)$(EXT) $(OBJ) $(DEP)
+	-rm $(BUILD_DIR)/zrythm.gresource.xml
+
+.PHONY: install
+install: $(BUILD_DIR)/$(BIN)$(EXT) install-appicon-data install-desktop-data install-gschemas install-fonts
+	$(MKDIR_P) $(DESTDIR)$(bindir)
+	$(INSTALL) $< $(DESTDIR)$(bindir)/$(BIN)$(EXT)
+
+.PHONY: uninstall
+uninstall:
+	rm -f $(bindir)/$(BIN)$(EXT)
+
+.PHONY: install-appicon-data
+install-appicon-data: $(appicon_DATA)
+	$(MKDIR_P) "$(DESTDIR)$(appicondir)"
+	$(INSTALL_DATA) $< "$(DESTDIR)$(appicondir)/"
+
+#.PHONY: install-icon-theme
+#install-icon-theme: ext/breeze-icons/icons-dark
+	#$(MKDIR_P) "$(DESTDIR)$(datadir)/icons/breeze-dark-z"
+	#chmod 755 "$(DESTDIR)$(datadir)/icons/breeze-dark-z"
+	#cp -r $</* "$(DESTDIR)$(datadir)/icons/breeze-dark-z/"
+
+.PHONY: install-gschemas
+install-gschemas: $(gsettings_SCHEMAS)
+	$(MKDIR_P) "$(DESTDIR)$(gsettingsschemadir)"
+	$(INSTALL_DATA) $< "$(DESTDIR)$(gsettingsschemadir)/"
+ifneq ($(PACKAGE_MODE),1)
+ifeq ($(DESTDIR),)
+	$(GLIB_COMPILE_SCHEMAS) "$(DESTDIR)$(gsettingsschemadir)"
+endif
+endif
+
+.PHONY: install-fonts
+install-fonts: $(FONTS_DIR)/Segment7Standard/*
+	$(MKDIR_P) "$(DESTDIR)$(fontdir)/$(BIN)/Segment7Standard"
+	$(INSTALL_FONT) $< "$(DESTDIR)$(fontdir)/$(BIN)/Segment7Standard/"
+
+.PHONY: install-desktop
+install-desktop-data: $(desktop_DATA)
+	$(MKDIR_P) "$(DESTDIR)$(desktopdir)"
+	$(INSTALL_DATA) $< "$(DESTDIR)$(desktopdir)/"
+

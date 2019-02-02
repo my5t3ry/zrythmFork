@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.1 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <template class="CenterDockWidget" parent="DzlDockBin">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkBox" id="editor_top">
+        <property name="visible">1</property>
+        <property name="vexpand">1</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="TopDockEdgeWidget" id="top_dock_edge"/>
+        </child>
+        <child>
+          <object class="GtkPaned" id="tracklist_timeline">
+            <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <child>
+              <object class="GtkBox" id="tracklist_top">
+                <property name="visible">1</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="TracklistHeaderWidget" id="tracklist_header">
+                    <property name="visible">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="tracklist_scroll">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="vexpand">1</property>
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="vscrollbar-policy">external</property>
+                    <property name="shadow-type">in</property>
+                    <property name="max-content-height">66000</property>
+                    <property name="propagate-natural-height">1</property>
+                    <child>
+                      <object class="GtkViewport" id="tracklist_viewport">
+                        <property name="name">gviewport_instruments</property>
+                        <property name="height-request">6030</property>
+                        <property name="visible">1</property>
+                        <property name="vexpand">1</property>
+                        <property name="vscroll-policy">natural</property>
+                        <child>
+                          <object class="TracklistWidget" id="tracklist">
+                            <property name="name">tracklist</property>
+                            <property name="visible">1</property>
+                            <property name="height-request">6000</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">1</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">0</property>
+                <property name="shrink">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="timeline_ruler">
+                <property name="visible">1</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="ruler_scroll">
+                    <property name="height-request">60</property>
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="hscrollbar-policy">external</property>
+                    <property name="vscrollbar-policy">never</property>
+                    <property name="shadow-type">in</property>
+                    <child>
+                      <object class="GtkViewport" id="ruler_viewport">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <child>
+                          <object class="TimelineRulerWidget" id="ruler">
+                            <property name="visible">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="timeline_scroll">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="hscrollbar-policy">always</property>
+                    <property name="shadow-type">in</property>
+                    <property name="min-content-width">400</property>
+                    <child>
+                      <object class="GtkViewport" id="timeline_viewport">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="hscroll-policy">natural</property>
+                        <property name="vscroll-policy">natural</property>
+                        <child>
+                          <object class="TimelineArrangerWidget" id="timeline">
+                            <property name="visible">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">1</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="shrink">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="CenterDockBotBoxWidget" id="bot_box">
+            <property name="visible">1</property>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child type="left">
+      <object class="LeftDockEdgeWidget" id="left_dock_edge">
+        <property name="visible">True</property>
+      </object>
+    </child>
+    <child type="right">
+      <object class="RightDockEdgeWidget" id="right_dock_edge"/>
+    </child>
+    <child type="bottom">
+      <object class="BotDockEdgeWidget" id="bot_dock_edge"/>
+    </child>
+  </template>
+</interface>

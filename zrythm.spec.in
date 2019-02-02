@@ -1,0 +1,73 @@
+Summary: A free GNU/Linux Digital Audio Workstation (DAW) focused on electronic music and high modularity.
+Name: zrythm
+Version: @BRANCH@
+Release: 2%{?dist}
+License: GPLv3+
+URL: https://www.zrythm.org
+Group: System Environment/Base
+Source0: https://gitlab.com/alextee/zrythm/-/archive/@BRANCH@/zrythm-@BRANCH@.tar.gz
+
+BuildRequires: libxml2-devel
+BuildRequires: gtk3-devel
+BuildRequires: jack-audio-connection-kit-devel
+BuildRequires: lilv-devel
+BuildRequires: suil-devel
+BuildRequires: autoconf
+BuildRequires: lv2-devel
+BuildRequires: libdazzle-devel
+BuildRequires: libsndfile-devel
+BuildRequires: libsmf-devel
+BuildRequires: portaudio-devel
+BuildRequires: autoconf
+BuildRequires: automake
+BuildRequires: gcc
+BuildRequires: pkgconfig
+Requires: libxml2
+Requires: gtk3
+Requires: jack-audio-connection-kit
+Requires: lilv
+Requires: suil
+Requires: lv2
+Requires: libdazzle
+Requires: libsmf
+Requires: libsndfile
+Requires: portaudio
+Requires: breeze-icon-theme
+
+BuildRoot: ~/rpmbuild/
+
+%description
+Zrythm is a free modern music production system, also known
+as DAW. It aims to be highly modular, meaning everything
+should be automatable and inter-connectable, making it
+suitable for electronic music.
+
+It is written in C and it uses the GTK+3 toolkit. Bits and
+pieces are taken from other programs like Ardour and Jalv.
+
+More info at https://www.zrythm.org
+
+%prep
+%setup -q
+
+%build
+./autogen.sh
+%configure --enable-package-mode --enable-release
+%{__make} %{?_smp_mflags}
+
+%install
+%{__rm} -rf $RPM_BUILD_ROOT
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%doc README.md CONTRIBUTING.md INSTALL.md
+%{_bindir}/*
+%{_datadir}/*
+
+%changelog
+* Thu Jan 17 2019 Alexandros Theodotou <alex@alextee.org>
+- RPM release
